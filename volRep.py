@@ -28,13 +28,14 @@ RunConOutDir = str("./conout")
 RunConOutFileName = str("RunConOut_" + TimeStamp + ".log")
 RunConOutFile = str(RunConOutDir + '/' + RunConOutFileName)
 OpenFile_RunConOut = open(RunConOutFile, 'w')
-#sys.stdout = open(RunConOutDir + '/' + RunConOutFileName,'w')
+# DO NOT OPEN LOG FILE WHILE RUNNING THIS SCRIPT
 
 """
 Directing result file written directory
 """
 ResOutDir = str("./res")
 ResOutFileName = str("ResOut_" + TimeStamp + ".txt")
+# DO NOT OPEN RESULT FILE WHILE RUNNING THIS SCRIPT
 
 EstablishedPort = _initPort.portsAvailableonComputer()
 _commandLib.connMgr(EstablishedPort, "destruct")
@@ -43,8 +44,6 @@ _commandLib.enRemote(_commandLib.connMgr(EstablishedPort, "open"))
 Result_V = []
 Result_T = []
 Count = 0
-#enableTransOperation = _commandLib.ccTransCurrent(_commandLib.connMgr(EstablishedPort, "open"))
-#print(enableTransOperation)
 
 """
 CSV Writer:
@@ -53,7 +52,7 @@ csvfile = open(ResOutDir + '/' + ResOutFileName, 'w', newline='')
 writer = csv.writer(csvfile, delimiter=';', quotechar="'") # I don't fully understand why do we define writer this way...
 # https://stackoverflow.com/questions/44073900/csv-writer-removes-quotes-and-adds-newline
 # https://pymotw.com/2/csv/
-writer.writerow(['SEP=,'])
+writer.writerow(['SEP=,']) # Forcing Excel to parse the result file as a csv. This line is optional.
 writer.writerow(['Date & Time, Voltage[V]'])
 
 """
@@ -79,7 +78,7 @@ def periodReadV(Interval):
 
             MSG_ConOut = str("Iteration: " + str(Count) + " | Timestamp: " + time.strftime("%m/%d/%Y %H:%M:%S") + " | Voltage: " + VolRead)
             print(MSG_ConOut)
-            OpenFile_RunConOut.write(MSG_ConOut + "\n")
+            OpenFile_RunConOut.write(MSG_ConOut + "\n") # Dual output in both console and log file.
 
             time.sleep(NextCall - time.time())
 
