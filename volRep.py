@@ -49,7 +49,7 @@ def periodReadV(Interval):
     try:
         NextCall = time.time()
         _commandLib.loadOn(_commandLib.connMgr(EstablishedPort, "open"))
-        while float(_commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))) > 7.80:
+        while float(_commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))) > 8.2:
         #while Count < 5:
             VolRead = _commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))
             Result_V.append(VolRead)
@@ -60,7 +60,7 @@ def periodReadV(Interval):
             Count += 1
             print("Iteration: " + str(Count) + " | Timestamp: " + time.strftime("%m/%d/%Y %H:%M:%S") + " | Voltage: " + VolRead)
 
-            if float(_commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))) <= 7.80:
+            if float(_commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))) <= 8.2:
                 break
 
         print("Voltage Reached/Below Threshold.")
