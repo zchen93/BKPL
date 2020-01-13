@@ -74,20 +74,25 @@ def periodReadV(Interval):
             line = (time.strftime("%m/%d/%Y %H:%M:%S") + ',' + VolRead + ',,,,,,,')
             NextCall += Interval # Seconds
             Count += 1
+
             writer.writerow({line})
+            csvfile.flush()
 
             MSG_ConOut = str("Iteration: " + str(Count) + " | Timestamp: " + time.strftime("%m/%d/%Y %H:%M:%S") + " | Voltage: " + VolRead)
             print(MSG_ConOut)
             OpenFile_RunConOut.write(MSG_ConOut + "\n") # Dual output in both console and log file.
+            OpenFile_RunConOut.flush()
+            #time.sleep(NextCall - time.time())
+            time.sleep(Interval)
 
-            time.sleep(NextCall - time.time())
-
-            if float(_commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))) <= 8.2:
+            if float(_commandLib.readV(_commandLib.connMgr(EstablishedPort, "open"))) <= 8.20:
                 break
+            
         MSG_Volow = str("Voltage Reached/Below Threshold.")
 
         print(MSG_Volow)
         OpenFile_RunConOut.write(MSG_Volow + "\n")
+        OpenFile_RunConOut.flush()
 
         _commandLib.loadOff(_commandLib.connMgr(EstablishedPort, "open"))
 
@@ -95,7 +100,9 @@ def periodReadV(Interval):
         MSG_KBItr = str("Interrupted by user pressing 'CTRL+C'.")
         print(MSG_KBItr)
         OpenFile_RunConOut.write(MSG_KBItr + "\n")
+        OpenFile_RunConOut.flush()
         _commandLib.loadOff(_commandLib.connMgr(EstablishedPort, "open"))
+        sys.exit()
 
 #Thread_1 = threading.Thread(target=periodReadV(VoltageQueryInterval))
 #Thread_1.start()
@@ -104,13 +111,17 @@ def outro():
         MSG_Completion = str("Result writing complete. Readings: " + str(len(Result_V)))
         print(MSG_Completion)
         OpenFile_RunConOut.write(MSG_Completion + "\n")
+        OpenFile_RunConOut.flush()
     else:
         MSG_EptyRes = str("Empty result detected.")
         print(MSG_EptyRes)
         OpenFile_RunConOut.write(MSG_EptyRes + "\n")
+        OpenFile_RunConOut.flush()
 
     csvfile.close()
+    OpenFile_RunConOut.close()
     _commandLib.loadOff(_commandLib.connMgr(EstablishedPort, "open"))
 
-periodReadV(3)
+
+periodReadV(180)
 outro()
